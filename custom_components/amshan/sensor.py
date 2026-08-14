@@ -377,18 +377,13 @@ class AmsHanEntity(SensorEntity):
         if self._unique_id is None:
             if self._meter_info.meter_id:
                 self._unique_id = (
-                    f"{self._meter_info.manufacturer}-{self._meter_info.meter_id}-"
-                    f"{self.measure_id}"
+                    f"CEID-{self._config_entry_id}-{self._meter_info.manufacturer}-"
+                    f"{self._meter_info.meter_id}-{self.measure_id}"
                 )
             else:
-                manufacturer = {
-                    self._meter_info.manufacturer_id
-                    if self._meter_info.manufacturer_id
-                    else self._meter_info.manufacturer
-                }
                 self._unique_id = (
                     f"CEID-{self._config_entry_id}-"
-                    f"{manufacturer}{self._meter_info.type_id}"
+                    f"{self._meter_info.manufacturer}{self._meter_info.type_id}"
                     f"-{self.measure_id}"
                 )
         return self._unique_id
@@ -425,31 +420,13 @@ class AmsHanEntity(SensorEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Return device specific attributes."""
-        manufacturer = (
-            self._meter_info.manufacturer
-            if self._meter_info.manufacturer
-            else self._meter_info.manufacturer_id
-        )
-
-        meter_type = (
-            self._meter_info.type if self._meter_info.type else self._meter_info.type_id
-        )
-
         return DeviceInfo(
-            name=f"{manufacturer} {meter_type}",
-            identifiers={
-                (
-                    DOMAIN,
-                    self._meter_info.unique_id
-                    if self._meter_info.unique_id
-                    else self._config_entry_id,
-                )
-            },
-            manufacturer=manufacturer,
-            model=meter_type,
-            sw_version=self._meter_info.list_version_id,
-        )
-
+            identifiers={(DOMAIN, self._config_entry_id)},
+                name=f"{manufacturer} {meter_type}",
+                manufacturer=manufacturer,
+                model=meter_type,
+                sw_version=self._meter_info.list_version_id,
+            )
 
 class AmsHanHourlyEntity(AmsHanEntity, restore_state.RestoreEntity):
     """Representation of a AmsHan sensor each hour."""
