@@ -548,7 +548,6 @@ class AmsHanOptionsFlowHandler(config_entries.OptionsFlow):
 
     def __init__(self, config_entry: AmsHanConfigEntry) -> None:
         """Initialize options flow."""
-        super().__init__(config_entry)
         self.options = dict(config_entry.options)
 
     async def async_step_init(
