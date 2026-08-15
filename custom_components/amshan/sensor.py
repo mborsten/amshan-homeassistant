@@ -641,7 +641,7 @@ class MeterMeasureProcessor:
             if AmsHanEntity.is_measure_id_supported(measure_id):
                 if not self._new_measure_signal_name:
                     self._new_measure_signal_name = (
-                        f"{DOMAIN}_measure_available_meterid_{meter_id}"
+                        f"{DOMAIN}_measure_available_configentry_{self._config_entry_id}"
                     )
                 if not self._meter_info:
                     self._meter_info = MeterInfo.from_measure_data(measure_data)
