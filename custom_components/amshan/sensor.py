@@ -416,17 +416,27 @@ class AmsHanEntity(SensorEntity):
             )
 
         return measure
-
+    
     @property
     def device_info(self) -> DeviceInfo:
         """Return device specific attributes."""
+        manufacturer = (
+            self._meter_info.manufacturer
+            if self._meter_info.manufacturer
+            else self._meter_info.manufacturer_id
+        )
+    
+        meter_type = (
+            self._meter_info.type if self._meter_info.type else self._meter_info.type_id
+        )
+    
         return DeviceInfo(
+            name=f"{manufacturer} {meter_type}",
             identifiers={(DOMAIN, self._config_entry_id)},
-                name=f"{manufacturer} {meter_type}",
-                manufacturer=manufacturer,
-                model=meter_type,
-                sw_version=self._meter_info.list_version_id,
-            )
+            manufacturer=manufacturer,
+            model=meter_type,
+            sw_version=self._meter_info.list_version_id,
+        )
 
 class AmsHanHourlyEntity(AmsHanEntity, restore_state.RestoreEntity):
     """Representation of a AmsHan sensor each hour."""
